@@ -6,9 +6,9 @@ http://usercake.com
 
 //Database Information
 $db_host = "localhost"; //Host address (most likely localhost)
-$db_name = "login"; //Name of Database
+$db_name = "cyripe"; //Name of Database
 $db_user = "root"; //Name of database user
-$db_pass = "root"; //Password for database user
+$db_pass = "vaneerten010892"; //Password for database user
 $db_table_prefix = "uc_";
 
 GLOBAL $errors;
