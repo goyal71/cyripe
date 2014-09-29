@@ -1153,9 +1153,9 @@ function getUserProfiles($userId){
 function getProfileTypes($userId){
 	global $mysqli;
 	$stmt = $mysqli->prepare("SELECT pt.ID, pt.DisplayName
-								FROM user_profile_map upm, profile_types pt
-								where upm.profile_types_ID = pt.ID
-								AND upm.uc_users_ID <> ?");
+								FROM profile_types pt
+								LEFT OUTER JOIN user_profile_map upm on pt.Id = upm.profile_types_ID
+								WHERE upm.uc_users_ID <> ?");
 	$stmt->bind_param("i", $userId);
 	$stmt->execute();
 	$stmt->bind_result($id, $name);
