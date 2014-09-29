@@ -10,8 +10,11 @@ echo "
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <title> Cyripe 1.0 </title>
 <link href='".$template."' rel='stylesheet' type='text/css' />
-<script src='models/funcs.js' type='text/javascript'>
+<link rel='stylesheet' href='styles/pure-min.css' />
+<link rel='stylesheet' href='styles/cyripe.css' />
+<script src='scripts/jquery-1.11.1.js'></script>
+<script src='login_c/models/funcs.js' type='text/javascript'>
 </script>
 </head>";
-
 ?>
+

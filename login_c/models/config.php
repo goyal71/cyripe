@@ -33,10 +33,10 @@ $default_hooks = array("#WEBSITENAME#","#WEBSITEURL#","#DATE#");
 $default_replace = array($websiteName,$websiteUrl,$emailDate);
 
 if (!file_exists($language)) {
-	$language = "models/languages/en.php";
+	$language = "login_c/models/languages/en.php";
 }
 
-if(!isset($language)) $language = "models/languages/en.php";
+if(!isset($language)) $language = "login_c/models/languages/en.php";
 
 //Pages to require
 require_once($language);

@@ -176,6 +176,20 @@ function sanitize($str)
 	return strtolower(strip_tags(trim(($str))));
 }
 
+// Returns formatted input type and label
+function formatInputField($label, $type) {
+	$retVal = "<label>{$label}</label>";
+	switch(strToLower($type)) {
+		case "text":
+			$retVal .= "<input id='{$label}' type='text'></input>";
+			break;
+		case "select":
+			$retVal .= "<select><option value='0'>Select One</option></select>";
+			break;
+	}
+	return $retVal;
+}
+
 //Functions that interact mainly with .users table
 //------------------------------------------------------------------------------
 
@@ -1114,6 +1128,45 @@ function removePage($page, $permission) {
 	}
 	$stmt->close();
 	return $i;
+}
+
+//Get list of profiles from specific user
+function getUserProfiles($userId){
+	global $mysqli;
+	$stmt = $mysqli->prepare("SELECT pt.ID, pt.DisplayName, pt.IconUrl
+							  FROM user_profile_map upm, profile_types pt
+							  WHERE upm.profile_types_ID = pt.ID
+							  AND upm.uc_users_ID = ?");
+	$stmt->bind_param("i", $userId);
+	$stmt->execute();
+	$stmt->bind_result($id, $name, $icon);
+	while($stmt->fetch()){
+		$row[$name] = array('id' => $id, 'name' => $name, 'icon' => $icon);
+	}
+	$stmt->close();
+	if(isset($row)){
+		return $row;
+	}
+	return array();
+}
+
+function getProfileTypes($userId){
+	global $mysqli;
+	$stmt = $mysqli->prepare("SELECT pt.ID, pt.DisplayName
+								FROM user_profile_map upm, profile_types pt
+								where upm.profile_types_ID = pt.ID
+								AND upm.uc_users_ID <> ?");
+	$stmt->bind_param("i", $userId);
+	$stmt->execute();
+	$stmt->bind_result($id, $name);
+	while($stmt->fetch()){
+		$row[$name] = array('id' => $id, 'name' => $name);
+	}
+	$stmt->close();
+	if(isset($row)){
+		return $row;
+	}
+	return array();
 }
 
 //Check if a user has access to a page
