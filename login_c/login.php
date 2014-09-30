@@ -81,45 +81,47 @@ if(!empty($_POST))
 }
 
 require_once("models/header.php");
-
-echo "
-<body>
-<div id='wrapper'>
-<div id='top'><div id='logo'></div></div>
-<div id='content'>
-<h1>Cyripe 1.0</h1>
-<h2>Login</h2>
-<div id='left-nav'>";
-
-include("left-nav.php");
-
-echo "
-</div>
-<div id='main'>";
-
-echo resultBlock($errors,$successes);
-
-echo "
-<div id='regbox'>
-<form name='login' action='".$_SERVER['PHP_SELF']."' method='post'>
-<p>
-<label>Username:</label>
-<input type='text' name='username' />
-</p>
-<p>
-<label>Password:</label>
-<input type='password' name='password' />
-</p>
-<p>
-<label>&nbsp;</label>
-<input type='submit' value='Login' class='submit' />
-</p>
-</form>
-</div>
-</div>
-<div id='bottom'></div>
-</div>
-</body>
-</html>";
-
 ?>
+<body class="login-background">
+	<div class="login-header"></div>
+	<div class="login-main">
+		<?php echo resultBlock($errors,$successes); ?>
+		<div class="pure-g">
+			<div class="pure-u-1-2">
+				<h1 class="splash-head">Cyripe</h1>
+			</div>
+			<div class="pure-u-1-2">
+				<form name='login' class='pure-form' action='<?php echo $_SERVER['PHP_SELF'] ?>' method='post'>
+					<legend>Login</legend>
+					<fieldset class='pure-group'>
+						<input type='text' class='pure-input-2-3' placeholder='Username' autcomplete='off' name='username' />
+						<input type='password' class='pure-input-2-3' placeholder='Password' autocomplete='off' name='password' />
+					</fieldset>
+					<div class="grid-row-small">
+						<input type='submit' class='pure-button pure-input-1-3 pure-button-primary' value='Login' />
+						<div class="pure-u-1-24"></div>
+						<div class="pure-u-1-3">
+							<a href='forgot-password.php'>Forgot Password</a>
+							<div>
+								<?php
+									if ($emailActivation) {
+										echo "<a href='resend-activation.php'>Resend Activation Email</a>";
+									}
+								?>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="grid-row-medium">
+			<div class="pure-g">
+				<div class="pure-u-1-2"></div>
+				<div class="pure-u-1-2">
+					<span class="medium-size-text">Don't have an account? <a href='register.php'>Register here.</a></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

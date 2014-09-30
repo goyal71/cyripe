@@ -40,16 +40,20 @@
 		<div class="profile-list">
 			<?php
 				$profiles = getUserProfiles($loggedInUser->user_id);
-				foreach($profiles as $profile){
-					echo "<div class='block shopping'>
-							<div class='block-image ". strtolower($profile['name']) ."-block'>
-								<span class='valign-profile-img-helper'></span><img src='" . $profile['icon'] . "' />
-							</div>
-							<div class='edit-profile-button'>
-								<span class='edit-profile-button-helper'></span>
-								<a class='pure-button pure-button-primary' style='width: 50%'>Edit ". $profile['name'] ." Profile</a>
-							</div>
-						</div>";
+				if (count($profiles) == 0) {
+					echo "<div class='inset-text'>No profiles created yet.</div>";
+				} else {
+					foreach($profiles as $profile){
+						echo "<div class='block'>
+								<div class='block-image ". strtolower($profile['name']) ."-block'>
+									<span class='valign-profile-img-helper'></span><img src='images/" . $profile['icon'] . "' />
+								</div>
+								<div class='edit-profile-button'>
+									<span class='edit-profile-button-helper'></span>
+									<a class='pure-button pure-button-primary' style='width: 50%'>Edit ". $profile['name'] ." Profile</a>
+								</div>
+							</div>";
+					}
 				}
 			?>
 		</div>

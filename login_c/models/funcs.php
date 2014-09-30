@@ -1152,10 +1152,11 @@ function getUserProfiles($userId){
 
 function getProfileTypes($userId){
 	global $mysqli;
-	$stmt = $mysqli->prepare("SELECT pt.ID, pt.DisplayName
+	$stmt = $mysqli->prepare("SELECT pt.Id, pt.DisplayName
 								FROM profile_types pt
-								LEFT OUTER JOIN user_profile_map upm on pt.Id = upm.profile_types_ID
-								WHERE upm.uc_users_ID <> ?");
+								WHERE pt.Id NOT IN (SELECT profile_types_ID
+													FROM user_profile_map upm
+													WHERE upm.uc_users_ID = ?)");
 	$stmt->bind_param("i", $userId);
 	$stmt->execute();
 	$stmt->bind_result($id, $name);
