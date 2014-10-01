@@ -33,7 +33,7 @@ if(!empty($_POST))
 	if(!ctype_alnum($username)){
 		$errors[] = lang("ACCOUNT_USER_INVALID_CHARACTERS");
 	}
-	if(minMaxRange(5,25,$displayname))
+	if(minMaxRange(2,25,$displayname))
 	{
 		$errors[] = lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(5,25));
 	}
@@ -81,64 +81,44 @@ if(!empty($_POST))
 }
 
 require_once("models/header.php");
-echo "
-<body>
-<div id='wrapper'>
-<div id='top'><div id='logo'></div></div>
-<div id='content'>
-<h1>Cyripe 1.0</h1>
-<h2>Register</h2>
-
-<div id='left-nav'>";
-include("left-nav.php");
-echo "
-</div>
-
-<div id='main'>";
-
-echo resultBlock($errors,$successes);
-
-echo "
-<div id='regbox'>
-<form name='newUser' action='".$_SERVER['PHP_SELF']."' method='post'>
-
-<p>
-<label>User Name:</label>
-<input type='text' name='username' />
-</p>
-<p>
-<label>Display Name:</label>
-<input type='text' name='displayname' />
-</p>
-<p>
-<label>Password:</label>
-<input type='password' name='password' />
-</p>
-<p>
-<label>Confirm:</label>
-<input type='password' name='passwordc' />
-</p>
-<p>
-<label>Email:</label>
-<input type='text' name='email' />
-</p>
-<p>
-<label>Security Code:</label>
-<img src='models/captcha.php'>
-</p>
-<label>Enter Security Code:</label>
-<input name='captcha' type='text'>
-</p>
-<label>&nbsp;<br>
-<input type='submit' value='Register'/>
-</p>
-
-</form>
-</div>
-
-</div>
-<div id='bottom'></div>
-</div>
-</body>
-</html>";
 ?>
+<body class="login-background">
+	<div class="login-header"></div>
+	<div class="login-main">
+		<?php echo resultBlock($errors,$successes); ?>
+		<div class="pure-g">
+			<div class="pure-u-1-2">
+				<h1 class="splash-head">Cyripe</h1>
+			</div>
+			<div class="pure-u-1-2">
+				<form name='newUser' class="pure-form" action='<?php $_SERVER['PHP_SELF'] ?>' method='post'>
+					<legend>Register</legend>
+					<div class="grid-row-small"><input type='text' class="pure-input-2-3" autocomplete="off" placeholder="Username" name='username' /></div>
+					<div class="grid-row-small"><input type='text' class="pure-input-2-3" autocomplete="off" placeholder="Display Name" name='displayname' /></div>
+					<div class="grid-row-small"><input type='password' class="pure-input-2-3" autocomplete="off" placeholder="Password" name='password' /></div>
+					<div class="grid-row-small"><input type='password' class="pure-input-2-3" autocomplete="off" placeholder="Retype Password" name='passwordc' /></div>
+					<div class="grid-row-small"><input type='text' class="pure-input-2-3" autocomplete="off" placeholder="Email" name='email' /></div>
+					<div class="pure-g">
+						<div class="pure-u-1-3">
+							<input name='captcha' class="pure-input-1" placeholder="Enter Security Code" type='text'>
+						</div>
+						<div class="pure-u-1-24"></div>
+						<div class="pure-u-1-3">
+							<img style="vertical-align: middle; height: 50px" src='models/captcha.php'>
+						</div>
+					</div>
+					<input type='submit' class="pure-button pure-input-1-3 pure-button-primary" value='Register'/>
+				</form>
+			</div>
+		</div>
+		<div class="grid-row-small">
+			<div class="pure-g">
+				<div class="pure-u-1-2"></div>
+				<div class="pure-u-1-2">
+					<span class="medium-size-text">Already have an account? <a href='login.php'>Login here...</a></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

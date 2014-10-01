@@ -177,17 +177,41 @@ function sanitize($str)
 }
 
 // Returns formatted input type and label
-function formatInputField($label, $type) {
+function formatInputField($label, $type, $inputId) {
+	global $mysqli;
 	$retVal = "<label>{$label}</label>";
 	switch(strToLower($type)) {
 		case "text":
 			$retVal .= "<input id='{$label}' type='text'></input>";
 			break;
 		case "select":
-			$retVal .= "<select><option value='0'>Select One</option></select>";
+			$retVal .= "<select><option value='0'>Select One</option>";
+			$options = getDropdownValues($inputId);
+			foreach($options as $option) {
+				$retVal .= "<option value='$option'>$option</option>";
+			}
+			$retVal .= "</select>";
 			break;
 	}
 	return $retVal;
+}
+
+// Returns array of string values corresponding to dropdown values
+function getDropdownValues($id) {
+	global $mysqli;
+	$stmt = $mysqli->prepare("SELECT Value
+								FROM dropdowns
+								WHERE profile_fields_ID = ?
+								ORDER BY Sequence ASC");
+	$stmt->bind_param("i", $id);
+	$stmt->execute();
+	$options = array();
+	$stmt->bind_result($value);
+	while($stmt->fetch()) {
+		$options[] = $value;
+	}
+	$stmt->close();
+	return $options;
 }
 
 //Functions that interact mainly with .users table
@@ -211,31 +235,6 @@ function deleteUsers($users) {
 	$stmt->close();
 	$stmt2->close();
 	return $i;
-}
-
-//Check if a display name exists in the DB
-function displayNameExists($displayname)
-{
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
-		WHERE
-		display_name = ?
-		LIMIT 1");
-	$stmt->bind_param("s", $displayname);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
 }
 
 //Check if an email exists in the DB

@@ -118,7 +118,7 @@ require_once("models/header.php");
 			<div class="pure-g">
 				<div class="pure-u-1-2"></div>
 				<div class="pure-u-1-2">
-					<span class="medium-size-text">Don't have an account? <a href='register.php'>Register here.</a></span>
+					<span class="medium-size-text">Don't have an account? <a href='register.php'>Register here...</a></span>
 				</div>
 			</div>
 		</div>

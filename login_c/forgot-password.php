@@ -174,44 +174,27 @@ if(!empty($_POST))
 }
 
 require_once("models/header.php");
-echo "
-<body>
-<div id='wrapper'>
-<div id='top'><div id='logo'></div></div>
-<div id='content'>
-<h1>Cyripe 1.0</h1>
-<h2>Forgot Password</h2>
-<div id='left-nav'>";
-
-include("left-nav.php");
-
-echo "
-</div>
-<div id='main'>";
-
-echo resultBlock($errors,$successes);
-
-echo "
-<div id='regbox'>
-<form name='newLostPass' action='".$_SERVER['PHP_SELF']."' method='post'>
-<p>
-<label>Username:</label>
-<input type='text' name='username' />
-</p>
-<p>    
-<label>Email:</label>
-<input type='text' name='email' />
-</p>
-<p>
-<label>&nbsp;</label>
-<input type='submit' value='Submit' class='submit' />
-</p>
-</form>
-</div>
-</div>
-<div id='bottom'></div>
-</div>
-</body>
-</html>";
-
 ?>
+
+<body class="login-background">
+	<div class="login-header"></div>
+	<div class="login-main">
+		<?php echo resultBlock($errors, $successes) ?>
+		<div class="pure-g">
+			<div class="pure-u-1-2">
+				<h1 class="splash-head">Cyripe</h1>
+			</div>
+			<div class="pure-u-1-2">
+				<form name='newLostPass' class="pure-form" action='<?php $_SERVER['PHP_SELF'] ?>' method='post'>
+					<legend>Forgot Password</legend>
+					<fieldset class="pure-group">
+						<input type='text' class="pure-input-2-3" autocomplete="off" placeholder="Username" name='username' />
+						<input type='text' class="pure-input-2-3" autocomplete="off" placeholder="Email" name='email' />
+					</fieldset>
+					<input type='submit' class="pure-button pure-input-1-3 pure-button-primary" value='Submit' class='submit' />
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

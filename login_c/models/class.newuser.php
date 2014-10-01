@@ -17,7 +17,6 @@ class User
 	public $mail_failure = false;
 	public $email_taken = false;
 	public $username_taken = false;
-	public $displayname_taken = false;
 	public $activation_token = 0;
 	public $success = NULL;
 	
@@ -34,10 +33,6 @@ class User
 		if(usernameExists($this->username))
 		{
 			$this->username_taken = true;
-		}
-		else if(displayNameExists($this->displayname))
-		{
-			$this->displayname_taken = true;
 		}
 		else if(emailExists($this->clean_email))
 		{

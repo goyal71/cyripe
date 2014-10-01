@@ -27,7 +27,7 @@ if(!empty($websiteUrl))
 }
 else
 {
-	header("Location: http://".$_SERVER['HTTP_HOST']."/cyripe/login_c");
+	header("Location: http://".$_SERVER['HTTP_HOST']."/cyripe/login_c/login.php");
 	die();
 }	
 
