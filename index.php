@@ -46,7 +46,7 @@
 					foreach($profiles as $profile){
 						echo "<div class='block'>
 								<div class='block-image ". strtolower($profile['name']) ."-block'>
-									<span class='valign-profile-img-helper'></span><img src='images/" . $profile['icon'] . "' />
+									<div class='valign-profile-img-helper'></div><img src='images/" . $profile['icon'] . "' />
 								</div>
 								<div class='edit-profile-button'>
 									<span class='edit-profile-button-helper'></span>

@@ -16,6 +16,10 @@
 	}
 	$stmt->close();
 	foreach($fields as $field) {
-		echo formatInputField($field['label'], $field['type'], $field['id']);
+		echo "<div class='grid-row-medium'>
+				<div class='pure-g'>
+					<div class='pure-u-1-3'>" . formatInputField($field['label'], $field['type'], $field['id']) . "</div>
+				</div>
+			</div>";
 	}
  ?>

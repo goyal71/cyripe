@@ -179,13 +179,13 @@ function sanitize($str)
 // Returns formatted input type and label
 function formatInputField($label, $type, $inputId) {
 	global $mysqli;
-	$retVal = "<label>{$label}</label>";
+	$retVal = "<label>{$label}:</label>";
 	switch(strToLower($type)) {
 		case "text":
-			$retVal .= "<input id='{$label}' type='text'></input>";
+			$retVal .= "<input name='$inputId' style='width: 100%' id='{$label}' type='text'></input>";
 			break;
 		case "select":
-			$retVal .= "<select><option value='0'>Select One</option>";
+			$retVal .= "<select name='$inputId' style='width: 100%'><option value='0'>Select One</option>";
 			$options = getDropdownValues($inputId);
 			foreach($options as $option) {
 				$retVal .= "<option value='$option'>$option</option>";
