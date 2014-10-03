@@ -178,7 +178,7 @@ require_once("models/header.php");
 
 <body class="login-background">
 	<div class="login-header"></div>
-	<div class="login-main">
+	<div class="login-main header-shadow">
 		<?php echo resultBlock($errors, $successes) ?>
 		<div class="pure-g">
 			<div class="pure-u-1-2">

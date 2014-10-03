@@ -8,8 +8,9 @@
 	
 	if(!empty($_POST)) {
 		// update profile
-		saveUserProfileFields($_GET['p_type'], true);
-		header("Location: index.php");
+		$successful = saveUserProfileFields($_GET['p_type'], true);
+		$successMessage = $successful ? 'true' : 'false';
+		header("Location: index.php?profile_updated=$successMessage");
 		die();
 	}
 	
@@ -33,7 +34,13 @@
 	<div class="header">
 		<?php include("account_menu_header.php"); ?>
 		<div class="main-new-profile-form">
-			<div class="medium-size-text"><?php echo $profileName['DisplayName']; ?></div>
+			<span class="large-size-text"><?php echo $profileName['DisplayName']; ?></span>
+			<span class="right">
+				<form name="deleteProfile" class="pure-form" action="delete.php" method="post">
+					<input type="hidden" name="p_type" value="<?php echo $profileType; ?>" />
+					<input type="submit" class="button-error pure-button" onclick="if(!confirm('Are you sure you want to delete this profile?')){ return false; };" value="Delete Profile" />
+				</form>
+			</span>
 			<hr class="line-separator" />
 			<form name="editProfileForm" class="pure-form pure-form-stacked" method="post">
 				<div id="profileFieldSection"></div>

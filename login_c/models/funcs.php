@@ -251,12 +251,15 @@ function saveUserProfileFields($profileTypeId, $isUpdating) {
 			$sql = "INSERT INTO user_saved_fields (`value`, `profile_fields_ID`, `uc_users_ID`) 
 							VALUES ('{$_POST[$field]}', '{$field}', '{$loggedInUser->user_id}')";
 		}
-		$mysqli->query($sql);
+		if($mysqli->query($sql) === FALSE) { return false; }
 	}
 	if (!$isUpdating) {
-		$mysqli->query("INSERT INTO user_profile_map (`profile_types_ID`, `uc_users_ID`) VALUES ('{$profileTypeId}', '{$loggedInUser->user_id}')");
+		if($mysqli->query("INSERT INTO user_profile_map (`profile_types_ID`, `uc_users_ID`) VALUES ('{$profileTypeId}', '{$loggedInUser->user_id}')") === FALSE) {
+			return false;
+		}
 	}
 	$mysqli->close();
+	return true;
 }
 
 //Functions that interact mainly with .users table

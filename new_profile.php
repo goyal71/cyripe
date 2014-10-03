@@ -5,8 +5,9 @@
 	
 	if(!empty($_POST)) {
 		// save new profile
-		saveUserProfileFields($_POST['newProfileType'], false);
-		header("Location: index.php");
+		$successful = saveUserProfileFields($_POST['newProfileType'], false);
+		$successMessage = $successful ? 'true' : 'false';
+		header("Location: index.php?new_profile_saved=$successMessage");
 		die();
 	}
 	

@@ -10,11 +10,30 @@
 					this.scrollLeft -= (delta * 40);
 					e.preventDefault();
 				});
+				
+				setTimeout(function(){
+					$('.save-message').fadeOut();
+				}, 2500);
 			});
 		</script>
 		<div id="page-filler"></div>
 		<div class="header">
 			<?php $selectedHeader = 'home'; include("account_menu_header.php"); ?>
+			<?php 
+				if (@$_GET['new_profile_saved'] == 'true') {
+					echo "<div class='save-message successful-save-message'>Profile was created successfully.</div>";
+				} elseif (@$_GET['new_profile_saved'] == 'false') {
+					echo "<div class='save-message error-save-message'>Error creating profile. Please try again later.</div>";
+				} elseif (@$_GET['profile_updated'] == 'true') {
+					echo "<div class='save-message successful-save-message'>Profile was updated successfully.</div>";
+				} elseif (@$_GET['profile_updated'] == 'false') {
+					echo "<div class='save-message error-save-message'>Error updating profile. Please try again later.</div>";
+				} elseif (@$_GET['profile_deleted'] == 'true') {
+					echo "<div class='save-message successful-save-message'>Profile was deleted successfully.</div>";
+				} elseif (@$_GET['profile_deleted'] == 'false') {
+					echo "<div class='save-message error-save-message'>Error deleting profile. Please try again later.</div>";
+				}
+			?>
 		</div>
 		
 		<div class="profile-list">
