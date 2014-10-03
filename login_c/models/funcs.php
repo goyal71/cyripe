@@ -177,18 +177,35 @@ function sanitize($str)
 }
 
 // Returns formatted input type and label
-function formatInputField($label, $type, $inputId) {
-	global $mysqli;
+function formatInputField($label, $type, $inputId, $isUpdating) {
+	global $mysqli, $loggedInUser;
+	$savedValue = "";
+	if($isUpdating) {
+		// retrieve saved value for this field if it exists
+		$result = $mysqli->query("SELECT value FROM user_saved_fields
+									WHERE profile_fields_ID = {$inputId}
+									AND uc_users_ID = {$loggedInUser->user_id}
+									LIMIT 1");
+		$savedValue = $result->fetch_array();
+	}
 	$retVal = "<label>{$label}:</label>";
 	switch(strToLower($type)) {
 		case "text":
-			$retVal .= "<input name='$inputId' style='width: 100%' id='{$label}' type='text'></input>";
+			$retVal .= "<input name='$inputId' style='width: 100%' id='{$label}' type='text'";
+			if ($isUpdating) {
+				$retVal .= "value='{$savedValue['value']}'";
+			}
+			$retVal .= "/>";
 			break;
 		case "select":
 			$retVal .= "<select name='$inputId' style='width: 100%'><option value='0'>Select One</option>";
 			$options = getDropdownValues($inputId);
 			foreach($options as $option) {
-				$retVal .= "<option value='$option'>$option</option>";
+				$retVal .= "<option value='$option'";
+				if ($isUpdating) {
+					if ($option === $savedValue['value']) { $retVal .= "selected"; }
+				}
+				$retVal .= ">$option</option>";
 			}
 			$retVal .= "</select>";
 			break;
@@ -212,6 +229,34 @@ function getDropdownValues($id) {
 	}
 	$stmt->close();
 	return $options;
+}
+
+// Function to save user input fields, either adding a new profile or updating an existing one
+function saveUserProfileFields($profileTypeId, $isUpdating) {
+	global $mysqli, $loggedInUser;
+	$stmt = $mysqli->prepare("SELECT id FROM profile_fields WHERE profile_types_ID = ?");
+	$stmt->bind_param("i", $profileTypeId);
+	$stmt->execute();
+	$stmt->bind_result($fieldId);
+	$savedProfileFields = array();
+	while($stmt->fetch()) {
+		$savedProfileFields[] = $fieldId;
+	}
+	$stmt->close();
+	foreach ($savedProfileFields as $field) {
+		if ($isUpdating) {
+			$sql = "UPDATE user_saved_fields SET Value = '{$_POST[$field]}'
+					WHERE profile_fields_ID = '{$field}' AND uc_users_ID = '{$loggedInUser->user_id}'";
+		} else {
+			$sql = "INSERT INTO user_saved_fields (`value`, `profile_fields_ID`, `uc_users_ID`) 
+							VALUES ('{$_POST[$field]}', '{$field}', '{$loggedInUser->user_id}')";
+		}
+		$mysqli->query($sql);
+	}
+	if (!$isUpdating) {
+		$mysqli->query("INSERT INTO user_profile_map (`profile_types_ID`, `uc_users_ID`) VALUES ('{$profileTypeId}', '{$loggedInUser->user_id}')");
+	}
+	$mysqli->close();
 }
 
 //Functions that interact mainly with .users table

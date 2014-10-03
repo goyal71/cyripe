@@ -3,38 +3,18 @@
 	require_once("login_c/models/header.php");
 	if(!isUserLoggedIn()){ header("Location: login_c/"); die(); }
 ?>	
-	<script src="scripts/jquery.mousewheel.min.js"></script>
-	<script>
-		$(document).ready(function() {
-			$('html, body, *').mousewheel(function(e, delta) {
-				this.scrollLeft -= (delta * 40);
-				e.preventDefault();
-			});
-		});
-	</script>
 	<body>
+		<script>
+			$(document).ready(function() {
+				$('html, body, *').mousewheel(function(e, delta) {
+					this.scrollLeft -= (delta * 40);
+					e.preventDefault();
+				});
+			});
+		</script>
 		<div id="page-filler"></div>
 		<div class="header">
-			<div class="pure-g">
-				<div class="pure-u-19-24">
-					<div class="pure-menu pure-menu-open pure-menu-horizontal">
-						<a class="pure-menu-heading" href="#">Cyripe</a>
-						<ul>
-							<li class="pure-menu-selected"><a href="#">Home</a></li>
-							<li><a href="new_profile.php">Create New Profile</a></li>
-							<li><a href="#">Edit Information</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="pure-u-5-24">
-					<div class="pure-menu pure-menu-open pure-menu-horizontal">
-						<ul>
-							<li>Welcome, <?php echo $loggedInUser->displayname; ?>!</li>
-							<li><a href="login_c/logout.php">Logout</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
+			<?php $selectedHeader = 'home'; include("account_menu_header.php"); ?>
 		</div>
 		
 		<div class="profile-list">
@@ -50,7 +30,7 @@
 								</div>
 								<div class='edit-profile-button'>
 									<span class='edit-profile-button-helper'></span>
-									<a class='pure-button pure-button-primary' style='width: 50%'>Edit ". $profile['name'] ." Profile</a>
+									<a class='pure-button pure-button-primary' href='edit_profile.php?p_type={$profile['id']}' style='width: 50%'>Edit ". $profile['name'] ." Profile</a>
 								</div>
 							</div>";
 					}

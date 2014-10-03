@@ -13,6 +13,7 @@ echo "
 <link rel='stylesheet' href='http://".$_SERVER['HTTP_HOST']."/cyripe/styles/pure-min.css' />
 <link rel='stylesheet' href='http://".$_SERVER['HTTP_HOST']."/cyripe/styles/cyripe.css' />
 <script src='http://".$_SERVER['HTTP_HOST']."/cyripe/scripts/jquery-1.11.1.js'></script>
+<script src='http://".$_SERVER['HTTP_HOST']."/cyripe/scripts/jquery.mousewheel.min.js'></script>
 <script src='http://".$_SERVER['HTTP_HOST']."/cyripe/scripts/funcs.js' type='text/javascript'>
 </script>
 </head>";
