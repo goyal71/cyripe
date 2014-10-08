@@ -83,6 +83,24 @@ if(!empty($_POST))
 require_once("models/header.php");
 ?>
 <body class="login-background">
+	<script>
+		$(document).ready(function() {
+			if (window.innerWidth < 1250) {
+				$(".splash-head").hide();
+				$("#loginFormContainer").attr("class", "pure-u-1");
+			}
+		});
+		
+		$(window).resize(function() {
+			if (window.innerWidth < 1250) {
+				$(".splash-head").hide();
+				$("#loginFormContainer").attr("class", "pure-u-1");
+			} else {
+				$(".splash-head").show();
+				$("#loginFormContainer").attr("class", "pure-u-1-2");
+			}
+		});
+	</script>
 	<div class="login-header"></div>
 	<div class="login-main header-shadow">
 		<?php echo resultBlock($errors,$successes); ?>
@@ -90,7 +108,7 @@ require_once("models/header.php");
 			<div class="pure-u-1-2">
 				<h1 class="splash-head">Cyripe</h1>
 			</div>
-			<div class="pure-u-1-2">
+			<div id="loginFormContainer" class="pure-u-1-2">
 				<form name='login' class='pure-form' action='<?php echo $_SERVER['PHP_SELF'] ?>' method='post'>
 					<legend>Login</legend>
 					<fieldset class='pure-group'>

@@ -37,7 +37,7 @@ if(!empty($_POST))
 	{
 		$errors[] = lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(5,25));
 	}
-	if(!ctype_alnum($displayname)){
+	if(!ctype_alnum(str_replace(' ','',$displayname))){
 		$errors[] = lang("ACCOUNT_DISPLAY_INVALID_CHARACTERS");
 	}
 	if(minMaxRange(8,50,$password) && minMaxRange(8,50,$confirm_pass))
@@ -62,7 +62,6 @@ if(!empty($_POST))
 		if(!$user->status)
 		{
 			if($user->username_taken) $errors[] = lang("ACCOUNT_USERNAME_IN_USE",array($username));
-			if($user->displayname_taken) $errors[] = lang("ACCOUNT_DISPLAYNAME_IN_USE",array($displayname));
 			if($user->email_taken) 	  $errors[] = lang("ACCOUNT_EMAIL_IN_USE",array($email));		
 		}
 		else
@@ -83,6 +82,24 @@ if(!empty($_POST))
 require_once("models/header.php");
 ?>
 <body class="login-background">
+	<script>
+		$(document).ready(function() {
+			if (window.innerWidth < 1250) {
+				$(".splash-head").hide();
+				$("#registerFormContainer").attr("class", "pure-u-1");
+			}
+		});
+		
+		$(window).resize(function() {
+			if (window.innerWidth < 1250) {
+				$(".splash-head").hide();
+				$("#registerFormContainer").attr("class", "pure-u-1");
+			} else {
+				$(".splash-head").show();
+				$("#registerFormContainer").attr("class", "pure-u-1-2");
+			}
+		});
+	</script>
 	<div class="login-header"></div>
 	<div class="login-main header-shadow">
 		<?php echo resultBlock($errors,$successes); ?>
@@ -90,7 +107,7 @@ require_once("models/header.php");
 			<div class="pure-u-1-2">
 				<h1 class="splash-head">Cyripe</h1>
 			</div>
-			<div class="pure-u-1-2">
+			<div id="registerFormContainer" class="pure-u-1-2">
 				<form name='newUser' class="pure-form" action='<?php $_SERVER['PHP_SELF'] ?>' method='post'>
 					<legend>Register</legend>
 					<div class="grid-row-small"><input type='text' class="pure-input-2-3" autocomplete="off" placeholder="Username" name='username' /></div>

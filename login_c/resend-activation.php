@@ -77,7 +77,7 @@ if(!empty($_POST) && $emailActivation)
 					{
 						$mail = new userCakeMail();
 						
-						$activation_url = $websiteUrl."activate-account.php?token=".$new_activation_token;
+						$activation_url = $websiteUrl."login_c/activate-account.php?token=".$new_activation_token;
 						
 						//Setup our custom hooks
 						$hooks = array(
@@ -114,6 +114,24 @@ require_once("models/header.php");
 ?>
 
 <body class="login-background">
+	<script>
+		$(document).ready(function() {
+			if (window.innerWidth < 1250) {
+				$(".splash-head").hide();
+				$("#resendActivationFormContainer").attr("class", "pure-u-1");
+			}
+		});
+		
+		$(window).resize(function() {
+			if (window.innerWidth < 1250) {
+				$(".splash-head").hide();
+				$("#resendActivationFormContainer").attr("class", "pure-u-1");
+			} else {
+				$(".splash-head").show();
+				$("#resendActivationFormContainer").attr("class", "pure-u-1-2");
+			}
+		});
+	</script>
 	<div class="login-header"></div>
 	<div class="login-main header-shadow">
 		<?php echo resultBlock($errors,$successes); ?>
@@ -121,7 +139,7 @@ require_once("models/header.php");
 			<div class="pure-u-1-2">
 				<h1 class="splash-head">Cyripe</h1>
 			</div>
-			<div class="pure-u-1-2">
+			<div id="resendActivationFormContainer" class="pure-u-1-2">
 				<?php
 					//Show disabled if email activation not required
 					if(!$emailActivation)
