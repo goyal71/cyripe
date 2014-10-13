@@ -17,7 +17,7 @@
 	$result = $mysqli->query("SELECT DisplayName FROM profile_types WHERE Id = $profileType LIMIT 1");
 	$profileName = $result->fetch_array();
  ?>
- <body>
+ <body class="backlay">
 	<script>
 		$(document).ready(function() {
 			var xmlhttp = new XMLHttpRequest();
@@ -30,21 +30,20 @@
 			xmlhttp.send();
 		});
 	</script>
-	<div id="page-filler"></div>
 	<div class="header">
 		<?php include("account_menu_header.php"); ?>
-		<div class="main-new-profile-form">
-			<span class="large-size-text"><?php echo $profileName['DisplayName']; ?></span>
-			<span class="right">
-				<form name="deleteProfile" class="pure-form" action="delete.php" method="post">
-					<input type="hidden" name="p_type" value="<?php echo $profileType; ?>" />
-					<input type="submit" class="button-error pure-button" onclick="if(!confirm('Are you sure you want to delete this profile?')){ return false; };" value="Delete Profile" />
-				</form>
-			</span>
-			<hr class="line-separator" />
-			<form name="editProfileForm" class="pure-form pure-form-stacked" method="post">
-				<div id="profileFieldSection"></div>
-				<input id="updateProfileButton" type="submit" class="pure-button pure-input-1-4 pure-button-primary" value="Save" />
+	</div>
+	<div class="main-new-profile-form">
+		<span class="large-size-text"><?php echo $profileName['DisplayName']; ?></span>
+		<span class="right">
+			<form name="deleteProfile" class="pure-form" action="delete.php" method="post">
+				<input type="hidden" name="p_type" value="<?php echo $profileType; ?>" />
+				<input type="submit" class="button-error pure-button" onclick="if(!confirm('Are you sure you want to delete this profile?')){ return false; };" value="Delete Profile" />
 			</form>
-		</div>
+		</span>
+		<hr class="line-separator" />
+		<form name="editProfileForm" class="pure-form pure-form-stacked" method="post">
+			<div id="profileFieldSection"></div>
+			<input id="updateProfileButton" type="submit" class="pure-button pure-input-1-4 pure-button-primary" value="Save" />
+		</form>
 	</div>

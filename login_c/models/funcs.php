@@ -197,7 +197,7 @@ function formatInputField($label, $type, $inputId, $isUpdating) {
 			}
 			$retVal .= "/>";
 			break;
-		case "select":
+		case "dropdown":
 			$retVal .= "<select name='$inputId' style='width: 100%'><option value='0'>Select One</option>";
 			$options = getDropdownValues($inputId);
 			foreach($options as $option) {
@@ -209,8 +209,49 @@ function formatInputField($label, $type, $inputId, $isUpdating) {
 			}
 			$retVal .= "</select>";
 			break;
+		case "multiline":
+			$retVal .= "<textarea name='$inputId' style='width: 100%'>";
+			if ($isUpdating) {
+				$retVal .= $savedValue['value'];
+			}
+			$retVal .= "</textarea>";
+			break;
+		case "checkbox":
+			$retVal .= "<input name='$inputId' value='1' type='checkbox'";
+			if($isUpdating && $savedValue['value'] == '1'){ $retVal .= " checked"; }
+			$retVal .= "/>";
+			break;
+		case "radio":
+			$options = getDropdownValues($inputId);
+			foreach($options as $option) {
+				$retVal .= "<input type='radio' name='$inputId' value='$option'";
+				if ($isUpdating && ($option == $savedValue['value'])) { $retVal .= " checked"; }
+				$retVal .= "/>$option<br />";
+			}
+			break;
+		case "multiselect":
+			$options = getDropdownValues($inputId);
+			$savedValues = getSavedMultiselectValues($inputId, $loggedInUser->user_id);
+			foreach($options as $option) {
+				$retVal .= "<input type='checkbox' name='{$inputId}[]' value='$option'";
+				if ($isUpdating && in_array($option, $savedValues)) { $retVal .= " checked"; }
+				$retVal .= "/> $option<br />";
+			}
+			break;
 	}
 	return $retVal;
+}
+
+function getSavedMultiselectValues($fieldId, $userId) {
+	global $mysqli;
+	$result = $mysqli->query("SELECT value FROM user_saved_multiselect
+								WHERE profile_fields_ID = {$fieldId}
+								AND uc_users_ID = {$userId}");
+	$savedValues = array();
+	while ($row = $result->fetch_array()) {
+		$savedValues[] = $row[0];
+	}
+	return $savedValues;
 }
 
 // Returns array of string values corresponding to dropdown values
@@ -244,14 +285,37 @@ function saveUserProfileFields($profileTypeId, $isUpdating) {
 	}
 	$stmt->close();
 	foreach ($savedProfileFields as $field) {
-		if ($isUpdating) {
-			$sql = "UPDATE user_saved_fields SET Value = '{$_POST[$field]}'
-					WHERE profile_fields_ID = '{$field}' AND uc_users_ID = '{$loggedInUser->user_id}'";
+		if (is_array($_POST[$field])) {
+			// multiselect, saving values in user_saved_multiselect
+			$selectedValues = $_POST[$field];
+			$savedValues = getSavedMultiselectValues($field, $loggedInUser->user_id);
+			foreach($selectedValues as $multiselectValue) {
+				if (!in_array($multiselectValue, $savedValues)) {
+					// checked, but not saved in db
+					if ($mysqli->query("INSERT INTO user_saved_multiselect (`value`, `profile_fields_ID`, `uc_users_ID`)
+										VALUES ('{$multiselectValue}', '{$field}', '{$loggedInUser->user_id}')") === FALSE) { return false; }
+				}
+			}
+			foreach($savedValues as $savedValue) {
+				if (!in_array($savedValue, $selectedValues)) {
+					// in db, but not checked
+					if ($mysqli->query("DELETE FROM user_saved_multiselect 
+										WHERE value='{$savedValue}' 
+										AND profile_fields_ID='{$field}' 
+										AND uc_users_ID='{$loggedInUser->user_id}'") === FALSE) { return false; }
+				}
+			}
 		} else {
-			$sql = "INSERT INTO user_saved_fields (`value`, `profile_fields_ID`, `uc_users_ID`) 
-							VALUES ('{$_POST[$field]}', '{$field}', '{$loggedInUser->user_id}')";
+			$result = $mysqli->query("SELECT id FROM user_saved_fields WHERE profile_fields_ID = {$field} AND uc_users_ID = {$loggedInUser->user_id}");
+			if ($isUpdating && $result->num_rows > 0) {
+				$sql = "UPDATE user_saved_fields SET Value = '{$_POST[$field]}'
+						WHERE profile_fields_ID = '{$field}' AND uc_users_ID = '{$loggedInUser->user_id}'";
+			} else {
+				$sql = "INSERT INTO user_saved_fields (`value`, `profile_fields_ID`, `uc_users_ID`) 
+								VALUES ('{$_POST[$field]}', '{$field}', '{$loggedInUser->user_id}')";
+			}
+			if($mysqli->query($sql) === FALSE) { return false; }
 		}
-		if($mysqli->query($sql) === FALSE) { return false; }
 	}
 	if (!$isUpdating) {
 		if($mysqli->query("INSERT INTO user_profile_map (`profile_types_ID`, `uc_users_ID`) VALUES ('{$profileTypeId}', '{$loggedInUser->user_id}')") === FALSE) {
@@ -1197,14 +1261,19 @@ function getUserProfiles($userId){
 	return array();
 }
 
-function getProfileTypes($userId){
+function getProfileTypes($userId, $all){
 	global $mysqli;
-	$stmt = $mysqli->prepare("SELECT pt.Id, pt.DisplayName
-								FROM profile_types pt
-								WHERE pt.Id NOT IN (SELECT profile_types_ID
-													FROM user_profile_map upm
-													WHERE upm.uc_users_ID = ?)");
-	$stmt->bind_param("i", $userId);
+	$sql = "SELECT pt.Id, pt.DisplayName
+			FROM profile_types pt";
+	if (!$all) {
+		$sql .= " WHERE pt.Id NOT IN (SELECT profile_types_ID
+									FROM user_profile_map upm
+									WHERE upm.uc_users_ID = ?)";
+	}
+	$stmt = $mysqli->prepare($sql);
+	if (!$all) {
+		$stmt->bind_param("i", $userId);
+	}
 	$stmt->execute();
 	$stmt->bind_result($id, $name);
 	while($stmt->fetch()){
@@ -1215,6 +1284,11 @@ function getProfileTypes($userId){
 		return $row;
 	}
 	return array();
+}
+
+function getFieldTypes(){
+	global $mysqli;
+	return $mysqli->query("SELECT * FROM input_types");
 }
 
 //Check if a user has access to a page

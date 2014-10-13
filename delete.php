@@ -15,6 +15,20 @@
 		$successful = 'true';
 	} else {
 		$successful = 'false';
+		header("Location: index.php?profile_deleted=$successful");
+		die();
+	}
+	
+	if($mysqli->query("DELETE FROM user_saved_multiselect 
+						WHERE profile_fields_ID IN 
+							(SELECT id FROM profile_fields 
+								WHERE profile_types_ID = $profileType) 
+						AND uc_users_ID = {$loggedInUser->user_id}")) {
+		$successful = 'true';
+	} else {
+		$successful = 'false';
+		header("Location: index.php?profile_deleted=$successful");
+		die();
 	}
 	
 	if($mysqli->query("DELETE FROM user_profile_map WHERE profile_types_ID = {$profileType} AND uc_users_ID = {$loggedInUser->user_id}")) {

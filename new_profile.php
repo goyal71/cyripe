@@ -12,7 +12,7 @@
 	}
 	
 ?>
-<body>
+<body class="backlay">
 	<script>
 		$(document).ready(function () {
 			$("#saveNewProfileButton").hide();
@@ -35,31 +35,30 @@
 			xmlhttp.send();
 		}
 	</script>
-	<div id="page-filler"></div>
 	<div class="header">
 		<?php /* menu header */ $selectedHeader = 'new_profile'; include("account_menu_header.php"); ?>
-		<div class="main-new-profile-form">
-			<form name="saveNewProfileForm" class="pure-form pure-form-stacked" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-				<fieldset>
-					<div class="pure-g">
-						<div class="pure-u-1-3">
-							<label for="profileType">Profile Type:</label>
-							<select id="profileType" name="newProfileType" style="width: 100%" onchange="profileTypeSelectedIndexChanged(this.value)">
-								<option value="0">Select One</option>
-								<?php
-									$types = getProfileTypes($loggedInUser->user_id);
-									foreach($types as $type) {
-										echo "<option value='{$type['id']}'>{$type['name']}</option>";
-									}
-								?>
-							</select>
-						</div>
+	</div>
+	<div class="main-new-profile-form">
+		<form name="saveNewProfileForm" class="pure-form pure-form-stacked" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+			<fieldset>
+				<div class="pure-g">
+					<div class="pure-u-1-3">
+						<label for="profileType">Profile Type:</label>
+						<select id="profileType" name="newProfileType" style="width: 100%" onchange="profileTypeSelectedIndexChanged(this.value)">
+							<option value="0">Select One</option>
+							<?php
+								$types = getProfileTypes($loggedInUser->user_id, false);
+								foreach($types as $type) {
+									echo "<option value='{$type['id']}'>{$type['name']}</option>";
+								}
+							?>
+						</select>
 					</div>
-					<hr class="line-separator" />
-					<div id="profileFieldSection"></div>
-					<input id="saveNewProfileButton" type="submit" class="pure-button pure-input-1-4 pure-button-primary" value="Save" />
-				</fieldset>
-			</form>
-		</div>
+				</div>
+				<hr class="line-separator" />
+				<div id="profileFieldSection"></div>
+				<input id="saveNewProfileButton" type="submit" class="pure-button pure-input-1-4 pure-button-primary" value="Save" />
+			</fieldset>
+		</form>
 	</div>
 </body>
