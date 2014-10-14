@@ -1,5 +1,5 @@
 ﻿<?php
-   $db = new mysqli('localhost', 'root' ,'', 'cyripe');
+   $db = new mysqli('localhost', 'root' ,'vaneerten010892', 'cyripe');
 	
 	if(!$db) {
 	
@@ -13,7 +13,7 @@
 
 				$query = $db->query("SELECT color FROM colors WHERE color LIKE '$queryString%' LIMIT 10");
 				if($query) {
-				echo '<ul>';
+				echo '<ul class="color-suggestion-ul">';
 					while ($result = $query ->fetch_object()) {
 	         			echo '<li onClick="fill(\''.addslashes($result->color).'\');">'.$result->color.'</li>';
 	         		}
