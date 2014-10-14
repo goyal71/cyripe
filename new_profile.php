@@ -1,3 +1,33 @@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
+
+
+<script>
+function suggest(inputString){
+		if(inputString.length == 0) {
+			$('#suggestions').fadeOut();
+		} else {
+			$('#Color').addClass('load');
+			$.post("autosuggest.php", {queryString: ""+inputString+""}, function(data){
+				if(data.length >0) {
+					$('#suggestions').fadeIn();
+					$('#suggestionsList').html(data);
+					$('#Color').removeClass('load');
+				}
+			});
+		}
+	}
+
+	function fill(thisValue) {
+		$('#Color').val(thisValue);
+		setTimeout("$('#suggestions').fadeOut();", 600);
+	}
+	
+	function fade() {
+		setTimeout("$('#suggestions').fadeOut();", 600);
+	}
+
+</script>
+
 <?php
 	require_once("login_c/models/config.php");
 	require_once("login_c/models/header.php");
@@ -29,6 +59,12 @@
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					document.getElementById("profileFieldSection").innerHTML = xmlhttp.responseText;
 					$("#saveNewProfileButton").show();
+					$("<form id=\"form\" action=\"#\"><div id=\"suggest\">").insertBefore('#Color');
+					$('#Color').attr('onkeyup', 'suggest(this.value);');
+					$('#Color').attr('onblur', 'fade();');
+					$('#Color').attr('autocomplete', 'off');
+					$("<div class=\"suggestionsBox\" id=\"suggestions\" style=\"display: none;\"> <div position:absolute> <img src=\"arrow.png\" style=\"position: relative; top: -12px; left: 30px;\" alt=\"upArrow\" /><div class=\"suggestionList\" id=\"suggestionsList\"> &nbsp; </div> </div> </div> </div> </form>").insertAfter('#Color');
+
 				}
 			}
 			xmlhttp.open("GET", "get_profile_form_fields.php?p_type=" + typeId, true);
