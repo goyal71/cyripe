@@ -8,7 +8,7 @@ require_once("models/config.php");
 if (!securePage($_SERVER['PHP_SELF'])){die();}
 
 //Prevent the user visiting the logged in page if he/she is already logged in
-if(isUserLoggedIn()) { header("Location: account.php"); die(); }
+if(isUserLoggedIn()) { header("Location: index.php"); die(); }
 
 //Forms posted
 if(!empty($_POST))

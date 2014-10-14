@@ -30,7 +30,7 @@ $template = $settings['template']['value'];
 $master_account = -1;
 
 $default_hooks = array("#WEBSITENAME#","#WEBSITEURL#","#DATE#");
-$default_replace = array($websiteName,$websiteUrl,$emailDate);
+$default_replace = array($websiteName,$websiteUrl."login_c/",$emailDate);
 
 if (!file_exists($language)) {
 	$language = "login_c/models/languages/en.php";
