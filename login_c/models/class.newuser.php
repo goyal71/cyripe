@@ -67,7 +67,7 @@ class User
 				$mail = new userCakeMail();
 				
 				//Build the activation message
-				$activation_message = lang("ACCOUNT_ACTIVATION_MESSAGE",array($websiteUrl,$this->activation_token));
+				$activation_message = lang("ACCOUNT_ACTIVATION_MESSAGE",array($websiteUrl."login_c/",$this->activation_token));
 				
 				//Define more if you want to build larger structures
 				$hooks = array(
